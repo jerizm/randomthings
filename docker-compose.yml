@@ -9,7 +9,7 @@ sevenam:
     PORT: 80
 
 haproxy:
-  build: haproxy
+  image: haproxy
   links:
    - randomthings
    - sevenam
