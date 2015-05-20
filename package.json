@@ -1,0 +1,10 @@
+{
+  "name": "randomthings",
+  "private": true,
+  "version": "0.0.1",
+  "description": "",
+  "author": "Jerry Wang <jerryw@gmail.com>",
+  "dependencies": {
+    "express": "^4.12.4"
+  }
+}

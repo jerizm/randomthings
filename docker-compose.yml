@@ -1,0 +1,19 @@
+randomthings:
+  build: .
+  expose:
+    - 80
+
+sevenam:
+  image: 7am
+  environment:
+    PORT: 80
+
+haproxy:
+  build: haproxy
+  links:
+   - randomthings
+   - sevenam
+  ports:
+   - "80:80"
+  expose:
+   - "80"
