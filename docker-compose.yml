@@ -1,7 +1,11 @@
 randomthings:
-  build: .
+  image: ghost
   expose:
-    - 80
+   - 2368
+  volumes:
+    - /home/ghost:/var/lib/ghost
+  environment:
+    NODE_ENV: production
 
 sevenam:
   image: 7am
@@ -10,10 +14,13 @@ sevenam:
 
 haproxy:
   image: haproxy
+  volumes:
+    - /etc/haproxy:/usr/local/etc/haproxy
   links:
    - randomthings
    - sevenam
   ports:
    - "80:80"
   expose:
-   - "80"
+   - 80
+
