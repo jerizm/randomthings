@@ -1,0 +1,54 @@
+<!doctype html>
+<html ng-app="mailApp">
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+    <script>
+      var mailApp = angular.module('mailApp', []);
+      mailApp.controller('MailCtrl', function ($scope, $http){
+        var mailCtrl = this;
+        mailCtrl.loadJson = function() {
+          $http.get(mailCtrl.jsonUrl).success(function(data) {
+            mailCtrl.mails = data.mails;
+          });
+        };
+
+      });
+    </script>
+  </head>
+  <body>
+  <div ng-controller="MailCtrl as mailCtrl">
+      <form ng-submit="mailCtrl.loadJson()">
+        <input type="text" ng-model="mailCtrl.jsonUrl" size="30"
+               placeholder="Mailbox JSON URL">
+        <input class="btn-primary" type="submit" value="Load">
+      </form>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Opened</th>
+          <th>Title</th>
+          <th>Reward</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="mail in mailCtrl.mails | orderBy: '-date'">
+          <td>
+            {{mail.offered}}
+          </td>
+          <td>
+            {{mail.sub}}
+          </td>
+          <td>
+            {{mail.bonus_id}}
+            <img src="http://puzzledragonx.com/en/img/thumbnail/{{mail.bonus_id}}.png" width="30px" height="30px" />
+          </td>
+          <td>
+            {{mail.date}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </body>
+</html>
