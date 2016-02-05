@@ -1,26 +1,29 @@
-randomthings:
-  image: ghost
-  expose:
-   - 2368
-  volumes:
-    - /home/ghost:/var/lib/ghost
-  environment:
-    NODE_ENV: production
+version: '2'
 
-sevenam:
-  image: 7am
-  environment:
-    PORT: 80
+services:
+  randomthings:
+    build: .
+    expose:
+     - 80
+    environment:
+      NODE_ENV: production
+    restart: always
 
-haproxy:
-  image: haproxy
-  volumes:
-    - /etc/haproxy:/usr/local/etc/haproxy
-  links:
-   - randomthings
-   - sevenam
-  ports:
-   - "80:80"
-  expose:
-   - 80
 
+  sevenam:
+    build: ../7am
+    environment:
+      PORT: 80
+    restart: always
+
+  haproxy:
+    build:
+      context: ./haproxy
+    links:
+     - randomthings
+     - sevenam
+    ports:
+     - "80:80"
+    expose:
+     - 80
+    restart: always
