@@ -4,7 +4,7 @@ services:
   randomthings:
     build: .
     expose:
-     - 80
+      - 80
     environment:
       NODE_ENV: production
     restart: always
@@ -12,18 +12,27 @@ services:
 
   sevenam:
     build: ../7am
-    environment:
-      PORT: 80
+    expose:
+      - 8080
     restart: always
 
   haproxy:
     build:
       context: ./haproxy
     links:
-     - randomthings
-     - sevenam
+      - randomthings
+      - sevenam
     ports:
-     - "80:80"
+      - "80:80"
+      - "443:443"
     expose:
-     - 80
+      - 80
+      - 443
+    volumes:
+      - /etc/letsencrypt:/srv/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+    environment:
+      CERTS: 7am.randomthings.io,randomthings.io
+      EMAIL: jerryw@gmail.com
     restart: always
+
