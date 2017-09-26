@@ -1,26 +1,20 @@
-randomthings:
-  image: ghost
-  expose:
-   - 2368
-  volumes:
-    - /home/ghost:/var/lib/ghost
-  environment:
-    NODE_ENV: production
+version: '3'
 
-sevenam:
-  image: 7am
-  environment:
-    PORT: 80
-
-haproxy:
-  image: haproxy
-  volumes:
-    - /etc/haproxy:/usr/local/etc/haproxy
-  links:
-   - randomthings
-   - sevenam
-  ports:
-   - "80:80"
-  expose:
-   - 80
-
+services:
+  traefik:
+    image: traefik
+    # command: --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "443:443"
+      - "127.0.0.1:8080:8080"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+    networks:
+      - default
+    cap_drop:
+      - all
+    cap_add:
+      - net_bind_service
