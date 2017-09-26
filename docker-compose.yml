@@ -3,18 +3,35 @@ version: '3'
 services:
   traefik:
     image: traefik
-    # command: --logLevel=DEBUG
+    #command: --logLevel=DEBUG
+    env_file:
+      - /root/traefik.env
     ports:
       - "80:80"
       - "443:443"
-      - "127.0.0.1:8080:8080"
+      - "8080:8080"
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./acme:/etc/traefik/acme
       - ./traefik.toml:/etc/traefik/traefik.toml
-    networks:
-      - default
-    cap_drop:
-      - all
-    cap_add:
-      - net_bind_service
+  randomthings:
+    image: ghost:1-alpine
+    restart: always
+    environment:
+      url: https://randomthings.io
+    volumes:
+     - ./ghost/content:/var/lib/ghost/content
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=ghost"
+      - "traefik.frontend.rule=Host:randomthings.io"
+      - "traefik.port=2368"
+  7am:
+    build: ../7am
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=7am"
+      - "traefik.frontend.rule=Host:7am.randomthings.io"
+      - "traefik.port=8080"

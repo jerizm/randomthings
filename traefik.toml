@@ -26,8 +26,9 @@ address = ":443"
 [acme]
 # caServer = "https://acme-staging.api.letsencrypt.org/directory"
 email = "jerryw@gmail.com"
-storage = "acme.json" # or "traefik/acme/account" if using KV store
+storage = "/etc/traefik/acme/acme.json" # or "traefik/acme/account" if using KV store
 entryPoint = "https"
+dnsProvider = "digitalocean"
 onDemand = false
 OnHostRule = true
 
@@ -37,3 +38,8 @@ endpoint = "unix:///var/run/docker.sock"
 domain = "randomthings.io"
 watch = true
 exposedbydefault = false
+
+
+[[acme.domains]]
+  main = "randomthings.io"
+  sans = ["7am.randomthings.io"]
